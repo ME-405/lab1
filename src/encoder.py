@@ -47,15 +47,15 @@ class Encoder:
         if self.encoder_num == 1:
             self.timer = pyb.Timer(4, prescaler = 0, period = self.period)
             ## Link Encoder Channels
-            self.t4ch1 = self.timer.channel(1, pyb.Timer.ENC_A, pin=self.pinB6)
-            self.t4ch2 = self.timer.channel(2, pyb.Timer.ENC_B, pin=self.pinB7)
+            self.t4ch1 = self.timer.channel(1, pyb.Timer.ENC_AB, pin=self.pinB6)
+            self.t4ch2 = self.timer.channel(2, pyb.Timer.ENC_AB, pin=self.pinB7)
 #            print('Created encoder object associated with Encoder 1')
 
         if self.encoder_num == 2:
             self.timer = pyb.Timer(8, prescaler = 0, period = self.period)
             ## Link Encoder Channels
-            self.t8ch1 = self.timer.channel(1, pyb.Timer.ENC_A, pin=self.pinC6)
-            self.t8ch2 = self.timer.channel(2, pyb.Timer.ENC_B, pin=self.pinC7)
+            self.t8ch1 = self.timer.channel(1, pyb.Timer.ENC_AB, pin=self.pinC6)
+            self.t8ch2 = self.timer.channel(2, pyb.Timer.ENC_AB, pin=self.pinC7)
 #            print('Created encoder object associated with Encoder 2')
 
     def update(self):
