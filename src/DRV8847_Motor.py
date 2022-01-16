@@ -102,6 +102,16 @@ class Motor:
             
     def clear_fault(self):
 		'''
-		@details Enabling motor to perform as well as recieve signals from the control pannel
+		@details Enabling motor to perform as well as receiving signals from the control panel
 		'''
-        DRV8847.enable()        
+        DRV8847.enable()      
+
+	def run(self,motorNumber,duty_val)
+		'''
+		@details It allows to run the motor file from a main.py document
+		'''
+		DRV8847.motor(motorNumber)
+		DRV8847.enable()
+		self.set_duty(duty_val)
+		
+		

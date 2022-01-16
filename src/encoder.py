@@ -6,21 +6,18 @@
 ## Importation of libraries
 import pyb
 
-
 class Encoder:
     ''' @brief                  Interface with quadrature encoders
         @details                Initializes encoder objects and implements 
                                 methods to work directly with encoder hardware
     '''
 
-    def __init__(self, encoder_num):
+    def __init__(self):
         ''' @brief   Encoder Driver to manipulate physical encoders
             @details Constructs encoder objects by linking specified
                      encoder numbers to corresponding Nucleo pins
             @param   encoder_num Specify Encoder 1 or 2
         '''
-        ## Create class variable according to specified encoder number
-        self.encoder_num = encoder_num
 
         ## Prime Pin B6&7 on PCB to be used as timer objects with Encoder 1
         self.pinB6 = pyb.Pin(pyb.Pin.cpu.B6)
@@ -32,8 +29,8 @@ class Encoder:
 
         ## Reference Count used to compute change in encoder position (delta)
         # ref_count will update in each run through the "update" method
-        
 		self.ref_count = 0
+		
         ## Current Position: Position in [ticks] of the associated encoder
         # current_pos will update in each run through the "update" method       
         self.current_pos = 0
@@ -41,24 +38,6 @@ class Encoder:
 
         ## Establish Period for Encoder Counting, used to correct for overflow
         self.period = 65535 #period in Hz
-        
-        # Evaluate specified encoder number (1 or 2)
-        # Create timer objects associated with the appropriate encoder        
-        if self.encoder_num == 1:
-            self.timer = pyb.Timer(4, prescaler = 0, period = self.period)
-            ## Link Encoder Channels
-            self.t4ch1 = self.timer.channel(1, pyb.Timer.ENC_AB, pin=self.pinB6)
-            self.t4ch2 = self.timer.channel(2, pyb.Timer.ENC_AB, pin=self.pinB7)
-#            print('Created encoder object associated with Encoder 1')
-
-        elif self.encoder_num == 2:
-            self.timer = pyb.Timer(8, prescaler = 0, period = self.period)
-            ## Link Encoder Channels
-            self.t8ch1 = self.timer.channel(1, pyb.Timer.ENC_AB, pin=self.pinC6)
-            self.t8ch2 = self.timer.channel(2, pyb.Timer.ENC_AB, pin=self.pinC7)
-#            print('Created encoder object associated with Encoder 2')
-		else:
-			print('Please provide with the encoder that wants to be used')
 
     def update(self):
         ''' @details			Provides with the current position provided by the chosen encoder
@@ -115,3 +94,44 @@ class Encoder:
 #            self.delta -= self.period
         #self.update()
         return self.delta
+		
+	def run(self,encoder_num)
+		'''
+		@details It creates a function to run the encoder.py file based on the provided encoder that
+				 wants to be run
+		'''
+		## Create class variable according to specified encoder number
+        self.encoder_num = encoder_num
+		
+		# Evaluate specified encoder number (1 or 2)
+        # Create timer objects associated with the appropriate encoder        
+        if self.encoder_num == 1:
+            self.timer = pyb.Timer(4, prescaler = 0, period = self.period)
+            ## Link Encoder Channels
+            self.t4ch1 = self.timer.channel(1, pyb.Timer.ENC_AB, pin=self.pinB6)
+            self.t4ch2 = self.timer.channel(2, pyb.Timer.ENC_AB, pin=self.pinB7)
+#            print('Created encoder object associated with Encoder 1')
+			
+			# Getting the values for the encoder
+			self.set_position()
+			self.update()
+			self.get_position()
+			self.get_delta()
+
+        elif self.encoder_num == 2:
+            self.timer = pyb.Timer(8, prescaler = 0, period = self.period)
+            ## Link Encoder Channels
+            self.t8ch1 = self.timer.channel(1, pyb.Timer.ENC_AB, pin=self.pinC6)
+            self.t8ch2 = self.timer.channel(2, pyb.Timer.ENC_AB, pin=self.pinC7)
+#            print('Created encoder object associated with Encoder 2')
+
+			# Getting the values for the encoder
+			self.set_position()
+			self.update()
+			self.get_position()
+			self.get_delta()
+			
+		else:
+			print('Please provide with the encoder that wants to be used')
+		
+		
