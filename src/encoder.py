@@ -1,9 +1,9 @@
 ''' @file                       encoder.py
     @brief                      A driver for reading from Quadrature Encoders
-    @author                     Tyler McCue, Nick De Simone
-    @date                       January 1, 1970
+    @author                     Nick De Simone, Jacob-Bograd, Horacio Albarran
+    @date                       January 16, 2022
 '''
-
+## Importation of libraries
 import pyb
 
 
@@ -32,14 +32,14 @@ class Encoder:
 
         ## Reference Count used to compute change in encoder position (delta)
         # ref_count will update in each run through the "update" method
-        self.ref_count = 0
+        
+		self.ref_count = 0
         ## Current Position: Position in [ticks] of the associated encoder
         # current_pos will update in each run through the "update" method       
         self.current_pos = 0
-
         self.delta = 0
 
-        ## Establish Period for Encoder Counting
+        ## Establish Period for Encoder Counting, used to correct for overflow
         self.period = 65535 #period in Hz
         
         # Evaluate specified encoder number (1 or 2)
@@ -51,33 +51,39 @@ class Encoder:
             self.t4ch2 = self.timer.channel(2, pyb.Timer.ENC_AB, pin=self.pinB7)
 #            print('Created encoder object associated with Encoder 1')
 
-        if self.encoder_num == 2:
+        elif self.encoder_num == 2:
             self.timer = pyb.Timer(8, prescaler = 0, period = self.period)
             ## Link Encoder Channels
             self.t8ch1 = self.timer.channel(1, pyb.Timer.ENC_AB, pin=self.pinC6)
             self.t8ch2 = self.timer.channel(2, pyb.Timer.ENC_AB, pin=self.pinC7)
 #            print('Created encoder object associated with Encoder 2')
+		else:
+			print('Please provide with the encoder that wants to be used')
 
     def update(self):
-        ''' @brief
-            @details
+        ''' @details			Provides with the current position provided by the chosen encoder
             @return             The position of the encoder shaft
         '''
-
+		# Actualizing the encoder position 
         self.update_count = self.timer.counter()
+		
+		# Obtaining the difference between the encoder positions
         self.delta = self.update_count - self.ref_count
+		
+		# Correcting for overflow and underflow of the encoder reader value
         if self.delta > 0 and self.delta > self.period/2:
             self.delta -= self.period
-        if self.delta < 0 and abs(self.delta) > self.period/2:
+        elif self.delta < 0 and abs(self.delta) > self.period/2:
             self.delta += self.period
+		else:
+			print('Error in updated delta value')
 
 #        self.ref_count = self.timer.counter()
+		# Setting the reference position based on the "current" encoder position
         self.ref_count = self.update_count
-
+		# Updating the current position based on the provided delta value
         self.current_pos += self.delta
      
-
-
     def get_position(self):
         ''' @brief      Retrieve encoder position in [ticks]
             @details    Returns encoder position at time of function call
