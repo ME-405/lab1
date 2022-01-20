@@ -14,6 +14,6 @@ EncoderDriver = Encoder()
 Motor = MotorDriver() 
 
 
-while True:
+if __name__ = '__main__'
     EncoderDriver.run(1)    # Provide with the desired encoder
     MotorDriver.run(1,70)   # Provide with the desired motor and duty_cycle

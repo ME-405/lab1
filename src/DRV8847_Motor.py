@@ -31,6 +31,8 @@ class DRV8847:
         
         # Initialize board's nFAULT pin to disable motor when motor faults
         self.pinB2 = pyb.Pin(pyb.Pin.cpu.B2)
+		
+		# Setting a pin to check for any bugs
         self.faultInt = pyb.ExtInt(self.pinB2, mode=pyb.ExtInt.IRQ_FALLING, 
                                    pull=pyb.Pin.PULL_NONE, callback=self.fault_cb)
         
@@ -83,6 +85,7 @@ class Motor:
 		@details Initializing the implementation of the motor driver and parameters
 		'''
 		
+		# Setting channels
         self.channel_1 = ch1
         self.channel_2 = ch2
         
@@ -95,6 +98,7 @@ class Motor:
             self.channel_1.pulse_width_percent(duty)
             self.channel_2.pulse_width_percent(0)
 			print('Setting duty cycle to ' + str(duty))
+			
         else:
             self.channel_1.pulse_width_percent(0)
             self.channel_2.pulse_width_percent(-duty)
@@ -102,7 +106,7 @@ class Motor:
             
     def clear_fault(self):
 		'''
-		@details Enabling motor to perform as well as receiving signals from the control panel
+		@details Enabling motor to perform and clearing a fault as well as receiving signals from the control panel
 		'''
         DRV8847.enable()      
 
