@@ -32,9 +32,9 @@ class DRV8847:
         # Initialize board's nFAULT pin to disable motor when motor faults
         self.pinB2 = pyb.Pin(pyb.Pin.cpu.B2)
 		
-		# Setting a pin to check for any bugs
-        self.faultInt = pyb.ExtInt(self.pinB2, mode=pyb.ExtInt.IRQ_FALLING, 
-                                   pull=pyb.Pin.PULL_NONE, callback=self.fault_cb)
+		# # Setting a pin to check for any bugs
+        # self.faultInt = pyb.ExtInt(self.pinB2, mode=pyb.ExtInt.IRQ_FALLING, 
+                                   # pull=pyb.Pin.PULL_NONE, callback=self.fault_cb)
         
         # Define motor timer frequency. Must be >20kHz to avoid noise
         self.tim3 = pyb.Timer(3, freq = 20000)
@@ -54,13 +54,13 @@ class DRV8847:
         '''
         self.pinA15.value(False)
     
-    def fault_cb(self, IRQ_src):
-		'''
-        @brief It will report if there is any errors detected within the operation of the system
-        '''
-        print('Motor fault detected')
-        print('Disabling motor')
-        self.disable()
+    # def fault_cb(self, IRQ_src):
+		# '''
+        # @brief It will report if there is any errors detected within the operation of the system
+        # '''
+        # print('Motor fault detected')
+        # print('Disabling motor')
+        # self.disable()
     
     def motor(self, motorNum=1):
 		'''
@@ -106,7 +106,7 @@ class Motor:
             
     def clear_fault(self):
 		'''
-		@details Enabling motor to perform and clearing a fault as well as receiving signals from the control panel
+		@details Enabling motor to perform as well as receiving signals from the control panel
 		'''
         DRV8847.enable()      
 
