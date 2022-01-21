@@ -12,7 +12,7 @@ class Encoder:
                                 methods to work directly with encoder hardware
     '''
 
-    def __init__(self):
+    def __init__(self, pin1, pin2, timer, channel1, channel2):
         ''' @brief   Encoder Driver to manipulate physical encoders
             @details Constructs encoder objects by linking specified
                      encoder numbers to corresponding Nucleo pins
@@ -20,47 +20,48 @@ class Encoder:
         '''
 
         ## Prime Pin B6&7 on PCB to be used as timer objects with Encoder 1
-        self.pinB6 = pyb.Pin(pyb.Pin.cpu.B6)
-        self.pinB7 = pyb.Pin(pyb.Pin.cpu.B7)
-
-        ## Prime Pin C6&7 on PCB to be used as timer objects with Encoder 2
-        self.pinC6 = pyb.Pin(pyb.Pin.cpu.C6)
-        self.pinC7 = pyb.Pin(pyb.Pin.cpu.C7)
-
+        self.pin1 = pin1
+        self.pin2 = pin2
+        self.period = 65535
+        self.timer = pyb.Timer(timer, prescaler = 0, period = self.period)
+        self.ch1 = self.timer.channel(channel1, pyb.Timer.ENC_AB, pin=self.pin1)
+        self.ch2 = self.timer.channel(channel2, pyb.Timer.ENC_AB, pin=self.pin2)
+        
         ## Reference Count used to compute change in encoder position (delta)
         # ref_count will update in each run through the "update" method
-		self.ref_count = 0
-		
+        self.ref_count = 0
         ## Current Position: Position in [ticks] of the associated encoder
         # current_pos will update in each run through the "update" method       
         self.current_pos = 0
         self.delta = 0
 
         ## Establish Period for Encoder Counting, used to correct for overflow
-        self.period = 65535 #period in Hz
 
     def update(self):
         ''' @details			Provides with the current position provided by the chosen encoder
             @return             The position of the encoder shaft
         '''
-		# Actualizing the encoder position 
+        # Actualizing the encoder position 
         self.update_count = self.timer.counter()
-		
-		# Obtaining the difference between the encoder positions
+        print("DEBUG: UPDATE COUNT = ", str(self.update_count))
+        
+        # Obtaining the difference between the encoder positions
         self.delta = self.update_count - self.ref_count
-		
-		# Correcting for overflow and underflow of the encoder reader value
+        
+        # Correcting for overflow and underflow of the encoder reader value
         if self.delta > 0 and self.delta > self.period/2:
             self.delta -= self.period
         elif self.delta < 0 and abs(self.delta) > self.period/2:
             self.delta += self.period
-		else:
-			print('Error in updated delta value')
+        else:
+            print("Delta = ", self.delta, " period = ", self.period)
+            print('Error in updated delta value')
+
 
 #        self.ref_count = self.timer.counter()
-		# Setting the reference position based on the "current" encoder position
+        # Setting the reference position based on the "current" encoder position
         self.ref_count = self.update_count
-		# Updating the current position based on the provided delta value
+        # Updating the current position based on the provided delta value
         self.current_pos += self.delta
      
     def get_position(self):
@@ -86,24 +87,17 @@ class Encoder:
             @return             The change in position of the encoder shaft
                                 between the two most recent updates
         '''
-#        self.update_count = self.timer.counter()
-#        self.delta = self.update_count - self.ref_count
-#        if self.delta > 0 and self.delta > self.period/2:
-#            self.delta += self.period
-#        if self.delta < 0 and abs(self.delta) > self.period/2:
-#            self.delta -= self.period
-        #self.update()
         return self.delta
-		
-	def run(self,encoder_num)
-		'''
-		@details It creates a function to run the encoder.py file based on the provided encoder that
-				 wants to be run
-		'''
-		## Create class variable according to specified encoder number
+        
+    def run(self,encoder_num):
+        '''
+        @details It creates a function to run the encoder.py file based on the provided encoder that
+                 wants to be run
+        '''
+        ## Create class variable according to specified encoder number
         self.encoder_num = encoder_num
-		
-		# Evaluate specified encoder number (1 or 2)
+        
+        # Evaluate specified encoder number (1 or 2)
         # Create timer objects associated with the appropriate encoder        
         if self.encoder_num == 1:
             self.timer = pyb.Timer(4, prescaler = 0, period = self.period)
@@ -111,12 +105,12 @@ class Encoder:
             self.t4ch1 = self.timer.channel(1, pyb.Timer.ENC_AB, pin=self.pinB6)
             self.t4ch2 = self.timer.channel(2, pyb.Timer.ENC_AB, pin=self.pinB7)
 #            print('Created encoder object associated with Encoder 1')
-			
-			# Getting the values for the encoder
-			self.set_position()
-			self.update()
-			self.get_position()
-			self.get_delta()
+            
+            # Getting the values for the encoder
+            self.set_position()
+            self.update()
+            self.get_position()
+            self.get_delta()
 
         elif self.encoder_num == 2:
             self.timer = pyb.Timer(8, prescaler = 0, period = self.period)
@@ -125,13 +119,13 @@ class Encoder:
             self.t8ch2 = self.timer.channel(2, pyb.Timer.ENC_AB, pin=self.pinC7)
 #            print('Created encoder object associated with Encoder 2')
 
-			# Getting the values for the encoder
-			self.set_position()
-			self.update()
-			self.get_position()
-			self.get_delta()
-			
-		else:
-			print('Please provide with the encoder that wants to be used')
-		
-		
+            # Getting the values for the encoder
+            self.set_position()
+            self.update()
+            self.get_position()
+            self.get_delta()
+        else:
+            print('Please provide with the encoder that wants to be used')
+        
+        
+
