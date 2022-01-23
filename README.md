@@ -1,5 +1,5 @@
-##Cal Poly ME-405
-#Lab 01
+# Cal Poly ME-405
+## Lab 01
 Jacob Bograd, Nick De Simone, Horacio Albarran
 
 This lab is a basic Motor and Encoder class written in MicroPython
