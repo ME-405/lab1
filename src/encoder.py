@@ -1,26 +1,29 @@
-""" @file                       encoder.py
-    @brief                      A driver for reading from Quadrature Encoders
-    @author                     Nick De Simone, Jacob-Bograd, Horacio Albarran
-    @date                       January 22, 2022
+"""!
+     @file                       encoder.py
+     @brief                      A driver for reading from Quadrature Encoders
+     @author                     Nick De Simone, Jacob-Bograd, Horacio Albarran
+     @date                       January 22, 2022
 """
 ## Importating of libraries
 import pyb
 
 class Encoder:
-    ''' @brief                  Interface with quadrature encoders
-        @details                Initializes encoder objects and implements 
+    '''!
+    @brief                  Interface with quadrature encoders
+    @details                Initializes encoder objects and implements 
                                 methods to work directly with encoder hardware
     '''
 
     def __init__(self, pin1, pin2, timer, channel1, channel2):
-        ''' @brief   Encoder Driver to manipulate physical encoders
-            @details Constructs encoder objects by linking specified
+        '''!
+        @brief   Encoder Driver to manipulate physical encoders
+        @details Constructs encoder objects by linking specified
                      encoder numbers to corresponding Nucleo pins
-            @param   pin1 specify first pin of the encoder
-            @param   pin2 specify second pin of the encoder
-            @param   timer specify the chosen timer number for the encoder
-            @param   channel1 specify the first chosen channel
-            @param   channel2 specify the second chosen channel
+        @param   pin1 specify first pin of the encoder
+        @param   pin2 specify second pin of the encoder
+        @param   timer specify the chosen timer number for the encoder
+        @param   channel1 specify the first chosen channel
+        @param   channel2 specify the second chosen channel
         '''
         # Establish Period for Encoder Counting, 2^16 - 1, used to correct for overflow
         self.period = 65535
@@ -44,7 +47,8 @@ class Encoder:
         self.delta = 0
         
     def update(self):
-        ''' @details     Provides with the updated position provided by the chosen encoder and delta value
+        '''!
+        @details     Provides with the updated position provided by the chosen encoder and delta value
         '''
         # Actualizing the encoder position 
         self.update_count = self.timer.counter()
@@ -67,30 +71,34 @@ class Encoder:
         self.current_pos += self.delta
      
     def read(self):
-        ''' @brief      Retrieve encoder position in [ticks]
-            @details    Returns encoder position at time of function call
-            @return     current_pos
+        '''!
+        @brief      Retrieve encoder position in [ticks]
+        @details    Returns encoder position at time of function call
+        @return     current_pos
         '''
         print('Current position is = ' + str(self.current_pos))
         return self.current_pos
 
     def set_position(self, position):
-        ''' @brief      Set position in [ticks] of encoder
-            @param      position The new position of the encoder shaft
+        '''!
+        @brief      Set position in [ticks] of encoder
+        @param      position The new position of the encoder shaft
         '''   
         self.current_pos = position
 
     def zero(self):
-        ''' @brief      Allow user to set position in [ticks] of encoder to zero
+        '''!
+        @brief      Allow user to set position in [ticks] of encoder to zero
         '''
         self.current_pos = 0
         print('Position: '+ str(self.current_pos))
 
     def get_delta(self):
-        ''' @brief      Return difference in encoder position in [ticks]
-            @details    Returns change in encoder position between time of 
+        '''!
+        @brief      Return difference in encoder position in [ticks]
+        @details    Returns change in encoder position between time of 
                         function call and previous encoder update
-            @return             The change in position of the encoder shaft
-                                between the two most recent updates
+        @return     The change in position of the encoder shaft
+                        between the two most recent updates
         '''
         return self.delta

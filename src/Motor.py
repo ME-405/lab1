@@ -1,4 +1,4 @@
-'''
+'''!
 @file  Motor.py
 @brief MotorDriver class with associated methods 
 @author: Nick De Simone, Jacob-Bograd, Horacio Albarran
@@ -14,7 +14,7 @@ import time
 class MotorDriver:
     
     def __init__(self, en_pin, in1pin, in2pin, inputTimer, channel1, channel2):
-        '''
+        '''!
         @brief It will initialize the variables on the main file as well as motor defaults; MotorDriver-Class.
         '''
         # Initialize Motor 1 pins to be handled as PWM objects
@@ -33,14 +33,14 @@ class MotorDriver:
         print("DEBUG: ENABLED")
         
     def enable(self):
-        '''
+        '''!
         @brief Enable the motor
         '''
         self.enablePin.high()
         print("DEBUG: ENABLED")
         
     def disable(self):
-        '''
+        '''!
         @brief Sets the motor duty for the motor to zero
         '''
         self.ch1.pulse_width_percent(0)
@@ -48,7 +48,7 @@ class MotorDriver:
         print('Setting duty cycle to ' + str(0))
         
     def set_duty_cycle(self, duty):
-        '''
+        '''!
         @details Setting duty performance for the motor
         @param duty ranging from negative to positive one-hundred
         '''
