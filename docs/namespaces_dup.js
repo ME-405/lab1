@@ -1,6 +1,6 @@
 var namespaces_dup =
 [
-    [ "encoder", "namespaceencoder.html", null ],
+    [ "encoder", "namespaceencoder.html", "namespaceencoder" ],
     [ "main", "namespacemain.html", null ],
-    [ "Motor", "namespace_motor.html", null ]
+    [ "Motor", "namespace_motor.html", "namespace_motor" ]
 ];
