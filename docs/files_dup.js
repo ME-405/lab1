@@ -1,9 +1,10 @@
-var annotated_dup =
+var files_dup =
 [
-    [ "encoder", null, [
+    [ "encoder.py", "encoder_8py.html", [
       [ "Encoder", "classencoder_1_1_encoder.html", "classencoder_1_1_encoder" ]
     ] ],
-    [ "Motor", null, [
+    [ "main.py", "main_8py.html", "main_8py" ],
+    [ "Motor.py", "_motor_8py.html", [
       [ "MotorDriver", "class_motor_1_1_motor_driver.html", "class_motor_1_1_motor_driver" ]
     ] ]
 ];
